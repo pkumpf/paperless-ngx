@@ -9,6 +9,7 @@
 Build a reliable, efficient, low-maintenance document management system using the **existing Paperless-ngx capabilities first**.
 
 Success means:
+
 - Documents are imported, OCR-processed and safely retained.
 - Documents can be found easily using Paperless UI/app and search.
 - Metadata (e.g. title, correspondents, document types, tags) is as accurate and automatic as practical.
@@ -21,18 +22,19 @@ Useful filenames are welcome, but they must not drive extra storage architecture
 
 ## Standing architecture decisions
 
-| ID | Decision | Reason / consequence |
-| --- | --- | --- |
-| D-001 | **Native first**: verify standard Paperless functionality, configuration and supported integration points before new code or infrastructure. | Avoid duplicate systems, cost and maintenance. |
-| D-002 | External AI/embedding endpoints are acceptable *only when needed* for an otherwise native workflow; compare local and hosted options for cost, privacy and simplicity. | Native Paperless integration is the goal; not a blanket ban on model inference outside the container. |
-| D-003 | Qdrant, independent chunking pipelines and custom vector databases are **not assumed requirements**. | Reconsider only after proving that native indexing/retrieval cannot meet a concrete need. |
-| D-004 | Physical DS File folder layout and storage-path categorization are **not required**; use Paperless UI/app. | Optimize for finding and using documents, not a parallel filesystem taxonomy. |
-| D-005 | Work on a separate branch and PR; keep personal deployment decisions out of upstream PRs. | Changes remain reviewable, recoverable and independently testable. |
-| D-006 | Reassess assumptions **at every meaningful milestone**, not only when asked. | Prefer evidence and the smallest working solution over an inherited plan. |
+| ID    | Decision                                                                                                                                                               | Reason / consequence                                                                                  |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| D-001 | **Native first**: verify standard Paperless functionality, configuration and supported integration points before new code or infrastructure.                           | Avoid duplicate systems, cost and maintenance.                                                        |
+| D-002 | External AI/embedding endpoints are acceptable _only when needed_ for an otherwise native workflow; compare local and hosted options for cost, privacy and simplicity. | Native Paperless integration is the goal; not a blanket ban on model inference outside the container. |
+| D-003 | Qdrant, independent chunking pipelines and custom vector databases are **not assumed requirements**.                                                                   | Reconsider only after proving that native indexing/retrieval cannot meet a concrete need.             |
+| D-004 | Physical DS File folder layout and storage-path categorization are **not required**; use Paperless UI/app.                                                             | Optimize for finding and using documents, not a parallel filesystem taxonomy.                         |
+| D-005 | Work on a separate branch and PR; keep personal deployment decisions out of upstream PRs.                                                                              | Changes remain reviewable, recoverable and independently testable.                                    |
+| D-006 | Reassess assumptions **at every meaningful milestone**, not only when asked.                                                                                           | Prefer evidence and the smallest working solution over an inherited plan.                             |
 
 ## Known context versus verification needed
 
 **Historical context (do not interpret as a live inspection):**
+
 - Synology DS718+ with Docker is the target installation.
 - Existing import/OCR workflows and automatic metadata have been discussed and tested.
 - Earlier experiments indexed documents using a Qdrant-based solution; experiments do not establish a production requirement.
@@ -53,19 +55,20 @@ Useful filenames are welcome, but they must not drive extra storage architecture
 ## Next concrete milestone: native capability audit
 
 A **read-only** inspection of the Synology installation and the matching documentation:
+
 - Identify actual image/version and configuration flags relevant to built-in OCR, automated metadata, workflows, search, LLM index and document chat.
 - Inventory what is already active, unused, redundant or missing; do not mistake GitHub `dev` capabilities for deployed capabilities.
 - Determine whether storage-path classification rules can simply be **left unused**; remove or change rules only after identifying any reliance on them.
 - Recommend a minimal configuration-only path to test native retrieval / chat with traceable sources. Document embedding-model dependencies and resource implications for the DS718+.
 - Define small tests for import, metadata, search, RAG grounding / source links, and fallback behavior. Avoid introducing new databases by default.
 
-**Stop condition:** If native Paperless does not support a required feature on the deployed version, explicitly compare *upgrade / built-in extension / external component* before writing custom code.
+**Stop condition:** If native Paperless does not support a required feature on the deployed version, explicitly compare _upgrade / built-in extension / external component_ before writing custom code.
 
 ## Decision and observation log
 
-| Date | Item | Status |
-| --- | --- | --- |
-| 2026-10 | Native-first architecture already recorded in `AGENTS.md`. | Confirmed in fork |
-| 2026-11-06 | DS File directory taxonomy and storage-path classification removed from project objectives. | Decision |
+| Date       | Item                                                                                              | Status                                     |
+| ---------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| 2026-10    | Native-first architecture already recorded in `AGENTS.md`.                                        | Confirmed in fork                          |
+| 2026-11-06 | DS File directory taxonomy and storage-path classification removed from project objectives.       | Decision                                   |
 | 2026-11-06 | Native LLM index and document chat documented on fork `dev`; deployment still needs verification. | Documentation verified; live state unknown |
-| 2026-11-06 | Code-implementation responsibility temporarily moves from Copilot to ChatGPT acting via GitHub. | Working agreement |
+| 2026-11-06 | Code-implementation responsibility temporarily moves from Copilot to ChatGPT acting via GitHub.   | Working agreement                          |
