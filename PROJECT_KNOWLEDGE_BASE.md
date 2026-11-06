@@ -31,6 +31,14 @@ Useful filenames are welcome, but they must not drive extra storage architecture
 | D-005 | Work on a separate branch and PR; keep personal deployment decisions out of upstream PRs.                                                                              | Changes remain reviewable, recoverable and independently testable.                                    |
 | D-006 | Reassess assumptions **at every meaningful milestone**, not only when asked.                                                                                           | Prefer evidence and the smallest working solution over an inherited plan.                             |
 
+## Cleanup policy for superseded components
+
+Removing unnecessary infrastructure is a **required part of completing each migration**, not optional housekeeping. In particular, verify whether experimental vector databases, embedding/indexing services, model servers and custom image patches are still needed once native capabilities are configured and tested.
+
+For every candidate, identify what uses it (configuration, network endpoints, scheduled jobs, scripts, volume mounts); test the native replacement first; check backups and reversibility; then remove unused Compose services, containers, environment settings and finally volumes **only after confirming their contents are expendable**. Never delete a container's volumes merely because the service is stopped. Keep the default database/broker unless there is evidence they are redundant. Do not change the live Synology stack based on source-code review alone.
+
+The documented Paperless-ngx 3.3.0 LLM index supports RAG with an embedding backend and document chat. Whether it is active in the owner's modified installation is still **unverified**. The next read-only audit should establish dependencies before any cleanup decision.
+
 ## Known context versus verification needed
 
 **Historical context (do not interpret as a live inspection):**
